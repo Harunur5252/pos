@@ -138,12 +138,18 @@ class CustomerController extends Controller
          ]);
      }
      function customerWiseCreditPdf(Request $request){
+         $this->validate($request,[
+            'customer_id'=>'required',
+         ]);
         $data['allData'] = Payment::where('customer_id',$request->customer_id)->whereIn('paid_status',['partial_paid','full_due'])->get();
         $pdf   = PDF::loadView('backend.Pdf.customer-wise-credit-pdf', $data);
         $pdf->SetProtection(['copy', 'print'], '', 'pass');
         return $pdf->stream('customer-paid.pdf');
      }
      function customerWisePaidPdf(Request $request){
+        $this->validate($request,[
+            'customer_id'=>'required',
+         ]);
         $data['allData'] = Payment::where('customer_id',$request->customer_id)->where('paid_status','!=','full_due')->get();
         $pdf   = PDF::loadView('backend.Pdf.customer-wise-paid-pdf', $data);
         $pdf->SetProtection(['copy', 'print'], '', 'pass');

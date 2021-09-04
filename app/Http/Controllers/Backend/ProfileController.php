@@ -37,14 +37,16 @@ class ProfileController extends Controller
           $image = $request->image;
           if($image){
               if(file_exists($user->image)){
-                 unlink($user->image);
+                unlink($user->image);
               }
-               $imageName=date('Y-m-d').'.'.$image->getClientOriginalExtension();
-               Image::make($image)->resize(400,400)->save('upload/userprofileimg/'.$imageName);
-               $imageUrl ='upload/userprofileimg/'.$imageName;
+               $imageName=uniqid().'.'.$image->getClientOriginalExtension();
+               $derectory='upload/userprofileimg/';
+               $imagePath=$derectory.$imageName;
+               $image->move($derectory,$imageName);
+               
 
                 $user->gender      = $request->gender;
-                $user->image       = $imageUrl;
+                $user->image       = $imagePath;
                 $user->address     = $request->address;
                 $user->name        = $request->name;
                 $user->mobile      = $request->mobile;
